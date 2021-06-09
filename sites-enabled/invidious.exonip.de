@@ -1,0 +1,38 @@
+# proxy_cache_path /home/docker/invidious-cache/ levels=1:2 keys_zone=invidious:60m max_size=10g inactive=120m use_temp_path=off;
+server {
+    listen 80;
+    listen 443 ssl http2;
+
+    server_name invidious.exonip.de;
+
+    access_log off;
+    error_log off;
+
+    ssl_certificate /etc/letsencrypt/live/exonip.de-0001/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/exonip.de-0001/privkey.pem;
+
+    location ~ ^(/login|/signout) {
+        proxy_pass http://127.0.0.1:2003;
+        proxy_set_header Host $host;  # so Invidious knows domain
+        proxy_http_version 1.1;    # to keep alive
+        proxy_set_header Connection "";  # to keep alive
+
+    }
+
+   # location ~* ^.+\.(jpe?g|gif|png|ico|js)$ {
+   #     proxy_pass http://invidious-backend;
+   #     proxy_cache invidious;
+   #     proxy_cache_valid any 12h;
+   #     add_header X-Proxy-Cache $upstream_cache_status;
+   # }
+    
+    location / {
+        proxy_pass http://invidious-backend;
+        proxy_set_header Host $host;  # so Invidious knows domain
+        proxy_http_version 1.1;    # to keep alive
+        proxy_set_header Connection "";  # to keep alive
+
+    }
+
+    if ($https = '') { return 301 https://$host$request_uri; }  # if not connected to HTTPS, perma-redirect to HTTPS
+}

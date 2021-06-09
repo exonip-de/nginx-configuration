@@ -1,0 +1,16 @@
+server {
+    listen 80;
+    listen 443 ssl http2;
+
+    server_name exonip.de;
+
+    access_log off;
+    error_log off;
+
+    ssl_certificate /etc/letsencrypt/live/exonip.de/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/exonip.de/privkey.pem;
+    root /var/www/exonip.de/Exonip.de/public/;
+    
+
+    if ($https = '') { return 301 https://$host$request_uri; }  # if not connected to HTTPS, perma-redirect to HTTPS
+}

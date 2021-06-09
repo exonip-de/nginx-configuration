@@ -1,0 +1,24 @@
+server {
+    listen 80;
+    listen 443 ssl http2;
+
+    server_name search.exonip.de;
+
+    access_log off;
+    error_log off;
+
+    ssl_certificate /etc/letsencrypt/live/exonip.de-0001/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/exonip.de-0001/privkey.pem;
+
+    location / {
+        proxy_pass http://127.0.0.1:2007/;
+        proxy_set_header Host $host;
+    }
+
+    # Some users compained about the config being changed and this seemed like an easy way to prevent that
+    location /config {
+        deny all;
+    }
+
+    if ($https = '') { return 301 https://$host$request_uri; }
+}
