@@ -11,7 +11,7 @@ server {
     ssl_certificate_key /etc/letsencrypt/live/exonip.de-0001/privkey.pem;
 
     location / {
-        proxy_pass http://127.0.0.1:2006/;
+        proxy_pass http://127.0.0.1:2003/;
         proxy_set_header Host $host;
     }
 
