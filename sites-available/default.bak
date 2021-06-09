@@ -19,9 +19,6 @@
 # Default server configuration
 #
 server {
-        # Load configuration files for the default server block.
-        include /etc/nginx/default.d/*.conf;
-
 	listen 80 default_server;
 	listen [::]:80 default_server;
 
